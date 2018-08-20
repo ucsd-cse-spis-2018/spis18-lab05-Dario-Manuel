@@ -46,4 +46,7 @@ def invert_block( im ):
             BearBlue = 255 - blue
             im.putpixel( (x, y), (BearRed, BearGreen, BearBlue) )
             
+<<<<<<< HEAD
 
+=======
+>>>>>>> 68983e71a58e8e88b9e48a09063939e48efe6045
