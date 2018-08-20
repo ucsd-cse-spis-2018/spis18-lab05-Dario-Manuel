@@ -13,8 +13,8 @@ def invert( im ):
     (width, height) = im.size
 
     # Loop over the entire image
-    for x in range( width ):
-        for y in range( height ):
+    for x in range(im.size[0]//2, width ):
+        for y in range(im.size[1]//2):
             (red, green, blue) = im.getpixel((x, y))
              # Complete this function by adding your lines of code here.
              
@@ -36,4 +36,13 @@ bear.size
 invert(bear)
 bear.show()
 bear.save("invertedbear.jpg")
-#def invert_block( im )
+
+def invert_block( im ):
+    for x in range( width ):
+        for y in range( height ):
+            (red, green, blue) = im.getpixel((x, y)) 
+            BearRed = 255 - red
+            BearGreen = 255 - green
+            BearBlue = 255 - blue
+            im.putpixel( (x, y), (BearRed, BearGreen, BearBlue) )
+            
