@@ -1,4 +1,5 @@
 from PIL import Image
+import random
 
 def grayscale(im):
     ''' Create grayscale image from im object '''
@@ -90,7 +91,7 @@ def scale(im):
 
             newIm.putpixel((x//2, y//2), (red, green, blue))
     return newIm
-            
+
 def blur(im):
     ''' Make mirror image of left of a picture '''
     # Find the dimensions of the image
@@ -125,15 +126,35 @@ def blur(im):
             newIm.putpixel((x, y+1), (newRed, newGreen, newBlue))
             newIm.putpixel((x+1, y+1), (newRed, newGreen, newBlue))
     return newIm
-            
 
+def randomGrid(im):
+    ''' Shuffles picture into 36 parts '''
+    (width, height) = im.size
+    ptW = width//6
+    ptH = height//6
+    
+    grid = [((0, ptW),(0, ptH)),      ((ptW, 2*ptW), (0, ptH)),       ((2*ptW, 3*ptW), (0, ptH)),      ((3*ptW, 4*ptW), (0, ptH)),       ((4*ptW, 5*ptW), (0, ptH)),       ((5*ptW, width), (0, ptH)),
+            ((0, ptW),(ptH, 2*ptH)),  ((ptW, 2*ptW), (ptH, 2*ptH)),   ((2*ptW, 3*ptW), (ptH, 2*ptH)),  ((3*ptW, 4*ptW), (ptH, 2*ptH)),   ((4*ptW, 5*ptW), (ptH, 2*ptH)),   ((5*ptW, width), (ptH, 2*ptH)),
+            ((0,ptW), (2*ptH, 3*ptH)),((ptW, 2*ptW), (2*ptH, 3*ptH)), ((2*ptW,3*ptW), (2*ptH, 3*ptH)), ((3*ptW, 4*ptW), (2*ptH, 3*ptH)), ((4*ptW, 5*ptW), (2*ptH, 3*ptH)), ((5*ptW, width), (2*ptH, 3*ptH)),
+            ((0,ptW), (3*ptH, 4*ptH)),((ptW, 2*ptW), (3*ptH, 4*ptH)), ((2*ptW,3*ptW), (3*ptH, 4*ptH)), ((3*ptW, 4*ptW), (3*ptH, 4*ptH)), ((4*ptW, 5*ptW), (3*ptH, 4*ptH)), ((5*ptW, width), (3*ptH, 4*ptH)),
+            ((0,ptW), (4*ptH, 5*ptH)),((ptW, 2*ptW), (4*ptH, 5*ptH)), ((2*ptW,3*ptW), (4*ptH, 5*ptH)), ((3*ptW, 4*ptW), (4*ptH, 5*ptH)), ((4*ptW, 5*ptW), (4*ptH, 5*ptH)), ((5*ptW, width), (4*ptH, 5*ptH)),
+            ((0,ptW), (5*ptH, 6*ptH)),((ptW, 2*ptW), (5*ptH, 6*ptH)), ((2*ptW,3*ptW), (5*ptH, 6*ptH)), ((3*ptW, 4*ptW), (5*ptH, 6*ptH)), ((4*ptW, 5*ptW), (5*ptH, 6*ptH)), ((5*ptW, width), (5*ptH, 6*ptH))]
+    shuffled = grid.copy()
+    random.shuffle(shuffled)
 
+    holdIm = Image.new('RGB', ( width//6, height//6))
+    newIm  = Image.new('RGB', ( width, height))
 
+    # Loop over the entire image
+    for ind, block in enumerate(shuffled):
+        for x in range(block[0][0], block[0][1]):
+            for y in range(block[1][0], block[1][1]):
+                (red, green, blue) = im.getpixel((x, y))
 
-
-
-
-
+                holdIm.putpixel((x - block[0][0], y - block[1][0]), (red, green, blue))
+        newIm.paste(holdIm, box=(grid[ind][0][0], grid[ind][1][0]))
+    
+    return newIm
 
 ######################### FUNCTIONS DEFINED #########################
 
@@ -177,6 +198,8 @@ bear = Image.open("bear.jpg")
 bearScale= scale(bear)
 bearScale.show()
 
-# Resets bear
 bearBlur = blur(bear)
 bearBlur.show()
+
+bearShuffle = randomGrid(bear)
+bearShuffle.show()
